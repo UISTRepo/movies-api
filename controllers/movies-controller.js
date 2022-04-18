@@ -1,9 +1,13 @@
-exports.index = function (){
-    return 'get all';
+var moviesService = require('../services/movies-service')
+
+exports.index = async function(req, res, next) {
+    let movies = await moviesService.getAll();
+    res.json(movies)
 }
 
-exports.show = function (id){
-    return id;
+exports.show = function(req, res, next) {
+    let id = req.params.id
+    res.json(id)
 }
 
 exports.store = function (input){

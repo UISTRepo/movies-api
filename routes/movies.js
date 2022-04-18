@@ -3,14 +3,7 @@ var router = express.Router();
 
 var moviesController = require('../controllers/movies-controller');
 
-router.get('/', function(req, res, next) {
-    let movies = moviesController.index();
-    res.json(movies)
-});
-
-router.get('/:id', function(req, res, next) {
-    let movie = moviesController.show(req.params.id);
-    res.json(movie)
-});
+router.get('/', moviesController.index);
+router.get('/:id', moviesController.show);
 
 module.exports = router;
