@@ -8,13 +8,15 @@ var actorsRouter = require('./routes/actors');
 
 var app = express();
 
+app.use('/api', require('cors')());
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/movies', moviesRouter);
-app.use('/actors', actorsRouter);
+app.use('/api/movies', moviesRouter);
+app.use('/api/actors', actorsRouter);
 
 module.exports = app;
