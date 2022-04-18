@@ -7,5 +7,5 @@ exports.show = function (id){
 }
 
 exports.destroy = function (id){
-    return id;
+    return 'MOVIE DELETED';
 }
