@@ -32,20 +32,20 @@ exports.getById = (id) =>{
             if(error){
                 return reject(error);
             }
-            return resolve(elements);
+            return resolve(elements[0]);
         });
     });
 };
 
-exports.checkIfExists = (input) =>{
+exports.getByEmail = (email) =>{
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM users WHERE email = '" + input.email + "'";
+        const sql = "SELECT * FROM users WHERE email = '" + email + "'";
 
         connection.query(sql,  (error, elements)=>{
             if(error){
                 return reject(error);
             }
-            return resolve(elements);
+            return resolve(elements[0]);
         });
     });
 };

@@ -4,14 +4,9 @@ const jwt = require('jsonwebtoken');
 
 exports.login = async function (req, res, next) {
 
-    const input = {
-        email: req.body.email,
-    }
+    let user = await usersService.getByEmail(req.body.email);
 
-    let result = await usersService.checkIfExists(input);
-
-    if(result.length){
-        const user = result[0];
+    if(user){
         const check = await usersService.comparePassword(req.body.password, user.password);
 
         if(check){
@@ -19,30 +14,32 @@ exports.login = async function (req, res, next) {
         }
         else{
             res.status(403);
-            res.json({error: 'Wrong Password!'})
+            res.json({error: 'Wrong Password'})
         }
     }
     else{
         res.status(403);
-        res.json({error: 'No such email!'})
+        res.json({error: 'The user is not registered. Register your account first'})
     }
 }
 
 exports.register = async function (req, res, next) {
 
-    const input = {
-        name: req.body.name,
-        email: req.body.email,
-        password: await usersService.cryptPassword(req.body.password),
-    }
+    const email = req.body.email;
 
-    const alreadyRegistered = await usersService.checkIfExists(input);
+    const alreadyRegistered = await usersService.getByEmail(email);
 
-    if(alreadyRegistered.length){
+    if(alreadyRegistered){
         res.status(403);
         res.json('The user is already registered');
     }
     else{
+        const input = {
+            name: req.body.name,
+            email: email,
+            password: await usersService.cryptPassword(req.body.password),
+        }
+
         const result = await usersService.register(input);
         let user = await usersService.getById(result.insertId);
         res.json(prepareUser(user));
