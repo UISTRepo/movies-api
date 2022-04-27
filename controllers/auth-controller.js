@@ -1,6 +1,6 @@
 
 const usersService = require('../services/users-service');
-const jwt = require('jsonwebtoken');
+const jwtHelper = require('../helpers/jwt-helper');
 
 exports.login = async function (req, res, next) {
 
@@ -49,10 +49,6 @@ exports.register = async function (req, res, next) {
 
 function prepareUser(user){
     delete(user.password);
-    user.apiToken = generateAccessToken(user);
+    user.apiToken = jwtHelper.generateAccessToken(user);
     return user;
-}
-
-function generateAccessToken(user) {
-    return jwt.sign({id: user.id}, process.env.TOKEN_SECRET, { expiresIn: 60*60 });
 }
