@@ -12,6 +12,28 @@ exports.getAll = () =>{
     });
 };
 
+exports.getPortion = (offset, limit) =>{
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM movies LIMIT ' + limit + ' OFFSET ' + offset,  (error, elements)=>{
+            if(error){
+                return reject(error);
+            }
+            return resolve(elements);
+        });
+    });
+};
+
+exports.getCount = () =>{
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT COUNT(*) FROM movies',  (error, elements)=>{
+            if(error){
+                return reject(error);
+            }
+            return resolve(elements[0]);
+        });
+    });
+};
+
 exports.getById = (id) =>{
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM movies WHERE id = ' + id,  (error, elements)=>{

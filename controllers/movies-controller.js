@@ -2,6 +2,7 @@ var moviesService = require('../services/movies-service')
 var actorsService = require('../services/actors-service');
 
 exports.index = async function(req, res, next) {
+
     let movies = await moviesService.getAll();
 
     for(let i = 0; i < movies.length; i++){
@@ -9,6 +10,38 @@ exports.index = async function(req, res, next) {
     }
 
     res.json(movies);
+}
+
+exports.paginated = async function(req, res, next) {
+
+    let page = parseInt(req.query.page);
+
+    if(page < 0){
+        res.status(403);
+        res.json({error: 'Invalid data'});
+        return;
+    }
+
+    if(!page) page = 1;
+
+    const limit = 4;
+
+    let offset = (page - 1) * limit;
+
+    let movies = await moviesService.getPortion(offset, limit);
+    let count = await moviesService.getCount();
+
+    for(let i = 0; i < movies.length; i++){
+        movies[i] = await prepareMovie(movies[i]);
+    }
+
+    let result = {
+        current: page,
+        total: count['COUNT(*)'] / limit,
+        data: movies
+    };
+
+    res.json(result);
 }
 
 async function prepareMovie(movie){
